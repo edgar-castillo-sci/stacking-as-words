@@ -66,6 +66,31 @@ Los resultados principales:
 - `docs/research_notes.md` — las notas exploratorias completas (formato largo).
 - `docs/roadmap.md` — roadmap de desarrollo y estado actual.
 
+## Dependencias
+
+`stacking-as-words` depende de [`caugJAM`](https://github.com/edgar-castillo-sci/caugJAM)
+v0.1.0 (pinneado) por dos cosas:
+
+1. **Cadenas canónicas** — `caugjam.generate_poda(option, k)` genera los
+   representantes canónicos de cadenas JAM de `k` capas (usado por
+   todos los experimentos excepto `exp15_random_words.py`).
+2. **Datos de fibración** — `caugJAM/scripts/fibration.py` genera las
+   tablas padre→hijo usadas por `exp06` y `exp16`.
+
+Las cadenas canónicas se cachean en `data/` (gitignored), así que se
+generan una vez y se reutilizan. Los datos de fibración **no** se
+auto-generan por este paquete: copia los `.tsv` de
+`caugJAM/scripts/fibration.py`, o apunta `$SW_DATA_DIR` a un directorio
+que los contenga.
+
+Si `caugjam` no está instalado:
+- `exp15_random_words.py` sigue funcionando (combinatoria pura).
+- Los demás experimentos fallan con `ModuleNotFoundError` cuando
+  intentan regenerar una caché faltante.
+
+Dependencias transitivas: `canonjam` (traída por `caugjam`) y `numpy`
+(traída por ambos).
+
 ## Instalación
 
 Requiere `caugjam` v0.1.0 o superior:
@@ -93,6 +118,33 @@ Salidas grandes regenerables (`data/**/canonicas.txt`, fibration `.tsv`)
 o se proveen vía la variable de entorno `$SW_DATA_DIR`. Las salidas
 capturadas de los experimentos (`outputs/*.txt`) sí se versionan como
 evidencia.
+
+## Procedencia de los datos
+
+`data/summary/*.tsv` contiene evidencia versionada de los resultados del
+paper (conteos por celda por nivel y opción, y `N'(d)` para PL). Estos
+archivos se generaron con **caugJAM v0.1.0**
+(doi:10.5281/zenodo.23721460) y se verificaron contra el método completo
+de **canonJAM v1.2.1** (doi:10.5281/zenodo.23720668) en cada nivel.
+
+Para auditar los datos sin instalar caugJAM:
+
+```bash
+python3 experiments/verify_data.py
+```
+
+Esto carga los `.tsv` versionados y los compara contra los valores
+esperados del paper (rápido: < 1 s). Para recomputarlos desde cero con
+caugJAM:
+
+```bash
+python3 experiments/verify_data.py --regenerate
+```
+
+La cadena de procedencia es: **canonJAM** (definición de `κ`) →
+**caugJAM** (generador) → `data/summary/*.tsv` (evidencia archivada) →
+`verify_data.py` (verificación independiente). Ver `data/README.md`
+para detalles.
 
 ## Citación
 

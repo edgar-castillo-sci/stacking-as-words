@@ -10,7 +10,11 @@ dist/
 # Regenerable data (chains, canonical lists) — excluded because they can
 # exceed 100 MB at higher levels. Regenerate with caugjam.generate_poda,
 # or point $SW_DATA_DIR at a pre-generated cache.
-data/
+data/*
+!data/README.md
+!data/summary/
+!data/summary/*.tsv
+data/fibration/
 
 # caugJAM / canonJAM (installed from GitHub)
 caugjam/
