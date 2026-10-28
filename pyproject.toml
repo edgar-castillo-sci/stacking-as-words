@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "stacking-as-words"
+version = "0.1.0"
+description = "Combinatorial structure of JAM chains: four-cell classification, Möbius closed forms, and the kappa vs kappa^word divergence"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "Edgar Castillo (Independent Researcher)", email = "edgar.castillo.sci@gmail.com"},
+]
+dependencies = [
+    "caugjam @ git+https://github.com/edgar-castillo-sci/caugJAM.git@v0.1.0",
+]
+keywords = ["JAM", "combinatorics", "polytopes", "Ramsdell", "2D materials", "Möbius inversion"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Scientific/Engineering :: Chemistry",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+
+[project.urls]
+Homepage = "https://github.com/edgar-castillo-sci/stacking-as-words"
+Documentation = "https://github.com/edgar-castillo-sci/stacking-as-words#readme"
+Source = "https://github.com/edgar-castillo-sci/stacking-as-words"
+
+[project.optional-dependencies]
+tests = ["pytest"]
+
+[tool.setuptools.packages.find]
+include = ["sw*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+norecursedirs = ["experiments", "*.egg", ".*", "__pycache__", "build", "dist"]

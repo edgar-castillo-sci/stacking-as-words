@@ -15,5 +15,3 @@ data/
 # caugJAM / canonJAM (installed from GitHub)
 caugjam/
 canonjam/
-
-# Outputs of experiments (regenerate with experiments/run_all.py)
