@@ -11,8 +11,8 @@ each item and a clear definition of "done".
 | Phase | Status | Purpose |
 |---|---|---|
 | **Foundation** | done | Repository skeleton (code, tests, CI, docs) |
-| **Rigor** | next | Reproducibility without caugJAM |
-| **Runtime visibility** | planned | Show the caugJAM dependency at runtime |
+| **Rigor** | done | Reproducibility without caugJAM (v0.1.0, commit 1774cdf) |
+| **Runtime visibility** | next | Show the caugJAM dependency at runtime |
 | **Release v0.1.0** | planned | Tag, GitHub Release, Zenodo DOI |
 | **Cross-links** | optional | Discoverability across the three JAM repositories |
 
@@ -70,7 +70,9 @@ marked with `[B]`. Non-blocking items are `[R]` (recommended) or `[O]`
 
 ## What we are going to do
 
-### Phase A — Rigor (blocking for submission)
+### Phase A — Rigor (done)
+
+Completed in commit `1774cdf`. Details below kept for reference.
 
 | ID | Task | Priority | Estimate | Definition of done |
 |---|---|---|---|---|
