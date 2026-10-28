@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Utilidades compartidas para los tests de post_canonJAM."""
+"""Shared helpers for the stacking-as-words experiments."""
 
 import os
 from itertools import permutations
@@ -9,19 +9,19 @@ THREE_CYCLES = [("B", "C", "A"), ("C", "A", "B")]
 
 
 def apply_perm(w, perm):
-    """perm es una tupla (img de A, img de B, img de C)."""
+    """perm is a 3-tuple (image of A, image of B, image of C)."""
     mp = dict(zip("ABC", perm))
     return "".join(mp[c] for c in w)
 
 
 def is_s3_palindromic(w):
-    """∃ σ ∈ S3 tal que σ(w) = reverse(w)."""
+    """Exists sigma in S3 such that sigma(w) = reverse(w)."""
     rw = w[::-1]
     return any(apply_perm(w, p) == rw for p in S3)
 
 
 def is_periodic(w):
-    """∃ u, n≥2 con w = u^n."""
+    """Exists u and n >= 2 with w = u^n."""
     n = len(w)
     for d in range(1, n):
         if n % d == 0 and w[:d] * (n // d) == w:
@@ -30,14 +30,14 @@ def is_periodic(w):
 
 
 def is_strict_palindrome(w):
-    """H de Ramsdell: w == reverse(w)."""
+    """Ramsdell's H: w == reverse(w)."""
     return w == w[::-1]
 
 
 def is_3fold_screw(w):
     """
-    R de Ramsdell (versión combinatoria):
-    ∃ σ 3-ciclo y ∃ m ∈ {1,2} tal que σ(w) = rot^m(w).
+    Ramsdell's R (combinatorial version):
+    exists sigma a 3-cycle and m in {1, 2} such that sigma(w) = rot^m(w).
     """
     for m in (1, 2):
         rotated = w[m:] + w[:m]
@@ -48,7 +48,7 @@ def is_3fold_screw(w):
 
 
 def classify(w):
-    """Devuelve PP, Pp, pP o Ap."""
+    """Return PP, Pp, pP, or Ap."""
     p, q = is_s3_palindromic(w), is_periodic(w)
     if p and q:
         return "PP"
@@ -59,7 +59,7 @@ def classify(w):
     return "Ap"
 
 
-# ── chain_to_word ────────────────────────────────────────────────────────
+# -- chain_to_word ------------------------------------------------------
 def _split_chain(chain):
     blocks = chain.split("/")
     cols = []
@@ -78,11 +78,11 @@ def _split_chain(chain):
 
 def chain_to_word(chain, convention="star_or_plus0"):
     """
-    Proyecta una cadena canónica a su palabra ABC.
+    Project a canonical chain to its ABC word.
 
     convention:
-      "plus0"         → +0 (opciones 1-5, 7; falla en 6, 8)
-      "star_or_plus0" → *x si existe, si no +0 (opciones 1-8)
+      "plus0"         -> +0 (options 1-5, 7; fails on 6, 8)
+      "star_or_plus0" -> *x if present, otherwise +0 (all options 1-8)
     """
     cols = _split_chain(chain)
     k = len(cols[0])
@@ -101,15 +101,27 @@ def chain_to_word(chain, convention="star_or_plus0"):
                 break
         if letter is None:
             raise ValueError(
-                f"fila sin sitio distinguible: {row} en {chain} "
+                f"row without distinguishable site: {row} in {chain} "
                 f"(convention={convention})"
             )
         word.append(letter)
     return "".join(word)
 
 
-# ── load_canonical con caché ────────────────────────────────────────────
+# -- data loading -------------------------------------------------------
 _poda_cache = {}
+
+
+def _data_roots():
+    """Ordered list of candidate data roots."""
+    here = os.path.dirname(os.path.abspath(__file__))
+    repo_root = os.path.dirname(here)
+    roots = []
+    env_dir = os.environ.get("SW_DATA_DIR")
+    if env_dir:
+        roots.append(env_dir)
+    roots.append(os.path.join(repo_root, "data"))
+    return roots
 
 
 def load_canonical(option, k):
@@ -117,20 +129,13 @@ def load_canonical(option, k):
     Load canonical chains for the given option and level k.
 
     Lookup order:
-      1. $SW_DATA_DIR/n{k}/canonicas.txt          (option == 1)
-         $SW_DATA_DIR/opt{option}/n{k}/canonicas.txt  (option >= 2)
-      2. ./data/n{k}/canonicas.txt                (same layout, repo-local)
+      1. $SW_DATA_DIR/n{k}/canonicas.txt                  (option == 1)
+         $SW_DATA_DIR/opt{option}/n{k}/canonicas.txt      (option >= 2)
+      2. ./data/n{k}/canonicas.txt                        (option == 1)
+         ./data/opt{option}/n{k}/canonicas.txt            (option >= 2)
       3. regenerate with caugjam.generate_poda and cache in ./data/ (gitignored)
     """
-    here = os.path.dirname(os.path.abspath(__file__))
-    repo_root = os.path.dirname(here)
-
-    env_dir = os.environ.get("SW_DATA_DIR")
-    roots = []
-    if env_dir:
-        roots.append(env_dir)
-    roots.append(os.path.join(repo_root, "data"))
-
+    roots = _data_roots()
     if option == 1:
         rel = os.path.join("n" + str(k), "canonicas.txt")
     else:
@@ -148,7 +153,7 @@ def load_canonical(option, k):
         _poda_cache[option] = generate_poda(k, option)
 
     chains = _poda_cache[option][k]
-    path = os.path.join(roots[0], rel)
+    path = os.path.join(roots[-1], rel)
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w") as f:
         for ch in chains:
@@ -156,13 +161,49 @@ def load_canonical(option, k):
     return chains
 
 
+def load_fibration(option, k):
+    """
+    Load the (parent, child) pairs for the fibration k -> k+1.
+
+    Lookup order:
+      1. $SW_DATA_DIR/fibration/opt{option}/fib_n{k}_n{k+1}.tsv
+      2. $SW_DATA_DIR/fibration/fib_n{k}_n{k+1}.tsv
+      3. ./data/fibration/opt{option}/fib_n{k}_n{k+1}.tsv
+      4. ./data/fibration/fib_n{k}_n{k+1}.tsv
+      5. None if not found.
+
+    Fibration data is generated by caugJAM's scripts/fibration.py. To run
+    the experiments that need it without running caugJAM, either copy the
+    .tsv files under data/fibration/ here, or set $SW_DATA_DIR to a
+    directory that contains both canonicas.txt and fibration/.
+    """
+    fname = f"fib_n{k}_n{k + 1}.tsv"
+    candidates = []
+    for root in _data_roots():
+        candidates.append(os.path.join(root, "fibration", f"opt{option}", fname))
+        candidates.append(os.path.join(root, "fibration", fname))
+
+    for path in candidates:
+        if os.path.exists(path):
+            pairs = []
+            with open(path) as f:
+                next(f, None)  # skip header
+                for line in f:
+                    parts = line.rstrip("\n").split("\t")
+                    if len(parts) >= 2:
+                        pairs.append((parts[0], parts[1]))
+            return pairs
+
+    return None
+
+
 def divisors(n):
-    """Divisores positivos de n, en orden creciente."""
+    """Positive divisors of n, in increasing order."""
     return [d for d in range(1, n + 1) if n % d == 0]
 
 
 def moebius(n):
-    """Función de Möbius μ(n)."""
+    """Moebius function mu(n)."""
     if n == 1:
         return 1
     p, m, k = 2, n, 0
