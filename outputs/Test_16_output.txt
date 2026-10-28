@@ -1,0 +1,45 @@
+====================================================================================================
+TEST 16 — Transiciones prohibidas y estructura del fibrado
+====================================================================================================
+
+Celdas presentes como PADRE / HIJO por n:
+   n→n+1 |                                   padres |                                    hijos
+----------------------------------------------------------------------------------------------------
+1→2   |                                       pP |                                   PP, pP
+2→3   |                                   PP, pP |                               Ap, PP, pP
+3→4   |                               Ap, PP, pP |                               Ap, PP, pP
+4→5   |                               Ap, PP, pP |                               Ap, PP, pP
+5→6   |                               Ap, PP, pP |                           Ap, PP, Pp, pP
+6→7   |                           Ap, PP, Pp, pP |                               Ap, PP, pP
+7→8   |                               Ap, PP, pP |                           Ap, PP, Pp, pP
+
+Transiciones (padre → hijo) que NUNCA ocurren en n ≤ 7:
+  PP → Pp
+  Pp → PP
+  Pp → Pp
+
+Distribución condicional P(hijo | padre), agregada sobre n ≤ 7:
+ padre |     PP |     Pp |     pP |     Ap | total
+------------------------------------------------------------
+    PP |  0.250 |  0.000 |  0.125 |  0.625 |    24
+    Pp |  0.000 |  0.000 |  0.167 |  0.833 |     6
+    pP |  0.030 |  0.030 |  0.036 |  0.904 |   167
+    Ap |  0.003 |  0.003 |  0.064 |  0.929 |  1446
+
+Comparación P(hijo | padre) entre n y n+1 consecutivos:
+  n=2 vs n=3: 5/8 entradas dentro de ±0.05
+  n=3 vs n=4: 4/12 entradas dentro de ±0.05
+  n=4 vs n=5: 5/12 entradas dentro de ±0.05
+  n=5 vs n=6: 5/12 entradas dentro de ±0.05
+  n=6 vs n=7: 7/12 entradas dentro de ±0.05
+
+====================================================================================================
+LECTURA
+====================================================================================================
+
+- Las transiciones prohibidas son "ceros estructurales": sugieren
+  restricciones del fibrado que valen la pena documentar.
+- La distribución condicional muestra qué celdas son "estables" bajo
+  apilar y cuáles son "transitorias".
+- Si la matriz se estabiliza para n grande, hay una estructura
+  asintótica interesante para el paper compañero (augmentation).

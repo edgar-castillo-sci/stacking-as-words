@@ -1,0 +1,9 @@
+n=2
+  BPL: {frozenset({0, 1}): 1, frozenset({0, 7}): 3, frozenset({0}): 1}
+  BU:  {frozenset({0, 7}): 3, frozenset({0, 1}): 1, frozenset({0}): 1}
+  Match? True
+
+n=4
+  BPL: {frozenset({0, 1}): 6, frozenset({0}): 96, frozenset({0, 7}): 18}
+  BU:  {frozenset({0, 7}): 18, frozenset({0}): 96, frozenset({0, 1}): 6}
+  Match? True
