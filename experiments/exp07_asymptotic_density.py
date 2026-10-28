@@ -6,7 +6,7 @@ Para cada k, reporta la fracción de órbitas en cada celda.
 Predicción: la fracción de 'Ap' (aperiódica) tiende a 1 con k.
 """
 
-from common import classify, chain_to_word, load_canonical
+from sw.common import classify, chain_to_word, load_canonical
 
 CELLS = ["PP", "Pp", "pP", "Ap"]
 

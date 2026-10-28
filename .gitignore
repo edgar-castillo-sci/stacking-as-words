@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+build/
+dist/
+.venv/
+
+# Regenerable data (chains, canonical lists) — excluded because they can
+# exceed 100 MB at higher levels. Regenerate with caugjam.generate_poda,
+# or point $SW_DATA_DIR at a pre-generated cache.
+data/
+
+# caugJAM / canonJAM (installed from GitHub)
+caugjam/
+canonjam/
+
+# Outputs of experiments (regenerate with experiments/run_all.py)

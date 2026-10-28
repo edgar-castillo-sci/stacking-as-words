@@ -9,7 +9,7 @@ Las opciones 6 y 8 (1T, sin +0) son las problemáticas.
 """
 
 from itertools import permutations
-from common import S3, apply_perm
+from sw.common import S3, apply_perm
 from caugjam import rows_for_option
 
 

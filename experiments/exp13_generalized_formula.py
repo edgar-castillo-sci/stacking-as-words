@@ -12,7 +12,7 @@ Requiere que Test 12 haya corrido (para tener las canónicas de 5-8
 en disco). Si no, las genera y guarda.
 """
 
-from common import (
+from sw.common import (
     classify, chain_to_word, divisors, load_canonical, moebius,
 )
 

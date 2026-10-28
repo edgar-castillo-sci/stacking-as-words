@@ -18,7 +18,7 @@ Predicciones lógicas:
 """
 
 from collections import Counter
-from common import (
+from sw.common import (
     is_3fold_screw, is_periodic, is_s3_palindromic,
     is_strict_palindrome, chain_to_word, load_canonical,
 )

@@ -16,7 +16,7 @@ Si hay "S3P pero ni H ni R", S3P es estrictamente más fina que (H ∪ R).
 import sys
 from collections import Counter, defaultdict
 
-from common import (
+from sw.common import (
     classify, chain_to_word, is_3fold_screw, is_periodic,
     is_s3_palindromic, is_strict_palindrome, load_canonical,
 )

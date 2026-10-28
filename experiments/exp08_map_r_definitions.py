@@ -10,7 +10,7 @@ tienen R \ S3P ≠ ∅ (i.e., cuáles salvan la incomparabilidad).
 """
 
 from itertools import product
-from common import S3, apply_perm, is_s3_palindromic
+from sw.common import S3, apply_perm, is_s3_palindromic
 
 
 def all_words(k):

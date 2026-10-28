@@ -15,7 +15,7 @@ import csv
 import os
 from collections import Counter
 
-from common import chain_to_word, classify
+from sw.common import chain_to_word, classify
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)

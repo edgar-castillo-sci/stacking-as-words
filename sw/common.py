@@ -114,26 +114,41 @@ _poda_cache = {}
 
 def load_canonical(option, k):
     """
-    Carga canónicas desde datos/ si existen; si no, genera con poda
-    y guarda en disco para reutilizar entre procesos.
+    Load canonical chains for the given option and level k.
+
+    Lookup order:
+      1. $SW_DATA_DIR/n{k}/canonicas.txt          (option == 1)
+         $SW_DATA_DIR/opt{option}/n{k}/canonicas.txt  (option >= 2)
+      2. ./data/n{k}/canonicas.txt                (same layout, repo-local)
+      3. regenerate with caugjam.generate_poda and cache in ./data/ (gitignored)
     """
     here = os.path.dirname(os.path.abspath(__file__))
-    root = os.path.dirname(here)
-    if option == 1:
-        path = os.path.join(root, "datos", f"n{k}", "canonicas.txt")
-    else:
-        path = os.path.join(root, "datos", f"opt{option}", f"n{k}", "canonicas.txt")
+    repo_root = os.path.dirname(here)
 
-    if os.path.exists(path):
-        with open(path) as f:
-            return [line.strip() for line in f if line.strip()]
+    env_dir = os.environ.get("SW_DATA_DIR")
+    roots = []
+    if env_dir:
+        roots.append(env_dir)
+    roots.append(os.path.join(repo_root, "data"))
+
+    if option == 1:
+        rel = os.path.join("n" + str(k), "canonicas.txt")
+    else:
+        rel = os.path.join("opt" + str(option), "n" + str(k), "canonicas.txt")
+
+    for root in roots:
+        path = os.path.join(root, rel)
+        if os.path.exists(path):
+            with open(path) as f:
+                return [line.strip() for line in f if line.strip()]
 
     if option not in _poda_cache or max(_poda_cache[option]) < k:
         from caugjam import generate_poda
-        print(f"  (generando poda opción {option} hasta k={k}...)")
+        print(f"  (generating pruning data, option {option} up to k={k}...)")
         _poda_cache[option] = generate_poda(k, option)
 
     chains = _poda_cache[option][k]
+    path = os.path.join(roots[0], rel)
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w") as f:
         for ch in chains:

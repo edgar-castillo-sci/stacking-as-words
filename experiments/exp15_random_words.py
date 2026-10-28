@@ -12,7 +12,7 @@ Sin dependencias de poda: todo es combinatoria directa, rápido.
 """
 
 import random
-from common import classify, is_periodic, is_s3_palindromic
+from sw.common import classify, is_periodic, is_s3_palindromic
 
 CELLS = ["PP", "Pp", "pP", "Ap"]
 N_SAMPLES = 100_000

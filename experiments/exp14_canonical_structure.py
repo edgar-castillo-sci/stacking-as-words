@@ -14,7 +14,7 @@ palabras:
 """
 
 from collections import Counter
-from common import (
+from sw.common import (
     classify, chain_to_word, load_canonical,
 )
 

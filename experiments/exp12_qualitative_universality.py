@@ -6,7 +6,7 @@ Usa la convención star_or_plus0 (S3-equivariante para las 8 opciones,
 según Test 9). Compara celdas no vacías por k entre todas las opciones.
 """
 
-from common import classify, chain_to_word, load_canonical
+from sw.common import classify, chain_to_word, load_canonical
 
 # k_max por opción, ajustado por el tamaño del alfabeto
 OPTIONS = {
