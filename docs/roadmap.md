@@ -99,7 +99,7 @@ regenerating everything. With A1–A3, the reviewer runs
 **Why this phase is recommended:** the runtime visibility makes the
 `caugJAM` dependency explicit in every run, not just in the README.
 
-### Phase C — Release v0.1.0
+### Phase C — Release v0.1.0 (in progress)
 
 | ID | Task | Priority | Estimate | Definition of done |
 |---|---|---|---|---|
