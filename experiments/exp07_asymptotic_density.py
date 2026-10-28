@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Test 7: densidad asintótica por celda.
+Test 7: asymptotic density per cell.
 
-Para cada k, reporta la fracción de órbitas en cada celda.
-Predicción: la fracción de 'Ap' (aperiódica) tiende a 1 con k.
+For each k, report the fraction of orbits in each cell.
+Prediction: the fraction of 'Ap' (aperiodic) tends to 1 as k grows.
 """
 
 from sw.common import classify, chain_to_word, load_canonical
@@ -13,10 +13,10 @@ CELLS = ["PP", "Pp", "pP", "Ap"]
 
 if __name__ == "__main__":
     print("=" * 100)
-    print("TEST 7 — Densidad asintótica por celda (opción 1)")
+    print("TEST 7 - Asymptotic density per cell (option 1)")
     print("=" * 100)
     print()
-    print(f"{'k':>3} | {'órb':>6} | " + " | ".join(f"{c:>6}" for c in CELLS) + " | Ap/%")
+    print(f"{'k':>3} | {'orb':>6} | " + " | ".join(f"{c:>6}" for c in CELLS) + " | Ap/%")
     print("-" * 100)
 
     for k in range(2, 12):
@@ -35,5 +35,5 @@ if __name__ == "__main__":
               f" | {ap_pct:>6.2f}")
 
     print()
-    print("Predicción: Ap → 1 exponencialmente con k.")
-    print("El patrón es informativo como resumen grueso solo para k pequeño/intermedio.")
+    print("Prediction: Ap -> 1 exponentially in k.")
+    print("The pattern is informative as a coarse summary only for small/medium k.")

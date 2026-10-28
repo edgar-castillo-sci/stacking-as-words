@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """
-Test 13: fórmula universal para |Pp(k)| en las 8 opciones.
+Test 13: universal formula for |Pp(k)| across the 8 options.
 
-Extiende Test 11 (opción 1) a todas las opciones. Para cada opción:
+Extends Test 11 (option 1) to all options. For each option:
   A'(d) = |Pp(d)| + |Ap(d)|
-  N'(d) = Σ_{e|d} μ(d/e) A'(e)
-  |Pp(k)| = Σ_{d|k, 3≤d<k} N'(d)
-y compara con el valor real.
+  N'(d) = sum_{e|d} mu(d/e) A'(e)
+  |Pp(k)| = sum_{d|k, 3<=d<k} N'(d)
+and compare with the actual value.
 
-Requiere que Test 12 haya corrido (para tener las canónicas de 5-8
-en disco). Si no, las genera y guarda.
+Requires Test 12 to have run (to have canonical data for 5-8 on disk).
+If not, generates and caches it.
 """
 
 from sw.common import (
@@ -25,7 +25,7 @@ CELLS = ["PP", "Pp", "pP", "Ap"]
 
 
 def compute_cells(option, k):
-    """Devuelve {celda: conteo} para la opción y k dados."""
+    """Return {cell: count} for the given option and k."""
     chains = load_canonical(option, k)
     counts = {c: 0 for c in CELLS}
     for ch in chains:
@@ -35,7 +35,7 @@ def compute_cells(option, k):
 
 
 def compute_A(N_max, option):
-    """A'(d) = |Pp(d)| + |Ap(d)| para d = 1..N_max."""
+    """A'(d) = |Pp(d)| + |Ap(d)| for d = 1..N_max."""
     A = {1: 0}
     for d in range(2, N_max + 1):
         try:
@@ -48,7 +48,7 @@ def compute_A(N_max, option):
 
 
 def compute_N(A, N_max):
-    """N'(d) por inversión de Möbius."""
+    """N'(d) by Moebius inversion."""
     N = {}
     for d in range(1, N_max + 1):
         if A[d] is None:
@@ -74,14 +74,14 @@ def predict_Pp(N, k):
 
 if __name__ == "__main__":
     print("=" * 100)
-    print("TEST 13 — Fórmula universal para |Pp(k)| en las 8 opciones")
+    print("TEST 13 - Universal formula for |Pp(k)| across the 8 options")
     print("=" * 100)
     print()
 
     for option, k_max in OPTIONS.items():
         print(f"\n{'=' * 100}")
-        print(f"OPCIÓN {option} (k_max = {k_max})")
-        print('=' * 100)
+        print(f"OPTION {option} (k_max = {k_max})")
+        print("=" * 100)
 
         A = compute_A(k_max, option)
         N = compute_N(A, k_max)
@@ -91,13 +91,13 @@ if __name__ == "__main__":
             if A[d] is not None:
                 print(f"    A'({d:>2}) = {A[d]:>8}")
 
-        print(f"\n  N'(d) = Möbius inverse:")
+        print(f"\n  N'(d) = Moebius inverse:")
         for d in sorted(N):
             if N[d] is not None:
                 print(f"    N'({d:>2}) = {N[d]:>8}")
 
-        print(f"\n  Comparación |Pp(k)| predicho vs real:")
-        print(f"  {'k':>3} | {'predicho':>10} | {'real':>8} | {'match':>6}")
+        print(f"\n  Comparison |Pp(k)| predicted vs actual:")
+        print(f"  {'k':>3} | {'predicted':>10} | {'actual':>8} | {'match':>6}")
         print("  " + "-" * 40)
         all_ok = True
         for k in range(2, k_max + 1):
@@ -109,9 +109,9 @@ if __name__ == "__main__":
             if pred is None or real is None:
                 print(f"  {k:>3} | {'?':>10} | {'?':>8} |   ?")
                 continue
-            match = "✓" if pred == real else "✗"
+            match = "OK" if pred == real else "FAIL"
             if pred != real:
                 all_ok = False
             print(f"  {k:>3} | {pred:>10} | {real:>8} | {match:>6}")
 
-        print(f"\n  → {'✓ fórmula confirmada' if all_ok else '✗ fórmula falla'}")
+        print(f"\n  -> {'OK: formula confirmed' if all_ok else 'FAIL: formula fails'}")

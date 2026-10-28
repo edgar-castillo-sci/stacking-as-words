@@ -1,20 +1,21 @@
 #!/usr/bin/env python3
 """
-Test 9: análisis de escenarios para la convención del sitio distinguible.
+Test 9: scenario analysis for the distinguished-site convention.
 
-Para las opciones 1-8, probamos varias convenciones y verificamos si
-son S3-equivariantes:  π(σ·r) = σ·π(r)  para toda fila r y σ ∈ S3.
+For options 1-8, we try several conventions and check whether they are
+S3-equivariant:  pi(sigma . r) = sigma . pi(r)  for every row r and sigma in S3.
 
-Las opciones 6 y 8 (1T, sin +0) son las problemáticas.
+Options 6 and 8 (1T, no +0) are the tricky ones.
 """
 
-from itertools import permutations
+from collections import Counter
+
 from sw.common import S3, apply_perm
 from caugjam import rows_for_option
 
 
 def letter_position_plus0(row):
-    """El +0 es la letra."""
+    """The +0 is the distinguished site."""
     for pos, tok in enumerate(row):
         if tok == "+0":
             return pos
@@ -22,7 +23,7 @@ def letter_position_plus0(row):
 
 
 def letter_position_star(row):
-    """El *x es la letra. Si no hay *x, None."""
+    """The *x is the distinguished site. None if absent."""
     for pos, tok in enumerate(row):
         if tok.startswith("*"):
             return pos
@@ -30,7 +31,7 @@ def letter_position_star(row):
 
 
 def letter_position_first_star_or_plus0(row):
-    """Primero busca *x, si no hay, +0."""
+    """Look for *x first; otherwise +0."""
     p = letter_position_star(row)
     if p is not None:
         return p
@@ -38,42 +39,22 @@ def letter_position_first_star_or_plus0(row):
 
 
 def letter_position_rarest(row):
-    """El token que no se repite (el más raro)."""
-    from collections import Counter
+    """The token that does not repeat (the rarest one)."""
     c = Counter(row)
     rarest = min(c, key=lambda t: (c[t], t))
     return row.index(rarest)
 
 
 CONVENTIONS = {
-    "std (+0)":              letter_position_plus0,
-    "star (*x)":              letter_position_star,
-    "star_or_plus0":          letter_position_first_star_or_plus0,
-    "rarest":                 letter_position_rarest,
+    "std (+0)":       letter_position_plus0,
+    "star (*x)":      letter_position_star,
+    "star_or_plus0":  letter_position_first_star_or_plus0,
+    "rarest":         letter_position_rarest,
 }
 
 
-def permute_token(tok, sigma):
-    """Aplica σ a la letra del token (ignora el signo)."""
-    if tok == "+0":
-        return tok
-    if tok[0] in "+-*":
-        old = tok[1]
-        if old in "ABC":
-            new = apply_perm(old, sigma)
-            return tok[0] + new
-        return tok
-    if tok.startswith("("):
-        # par buckled: aplicar σ a ambos átomos
-        inner = tok[1:-1]  # +k-l
-        # naive: split by sign
-        return tok  # placeholder
-    return tok
-
-
 def permute_row(row, sigma):
-    """Aplica σ a las COLUMNAS (posiciones) de la fila."""
-    # sigma es una tupla ('A','B','C') → mapea letra a letra
+    """Apply sigma to the COLUMNS (positions) of the row."""
     mp = dict(zip("ABC", sigma))
     inv = {v: i for i, v in enumerate("ABC")}
     new_row = [None, None, None]
@@ -85,7 +66,7 @@ def permute_row(row, sigma):
 
 
 def check_equivariance(option, convention):
-    """Verifica π(σ·r) = σ·π(r) para todas las filas r y σ ∈ S3."""
+    """Verify pi(sigma.r) = sigma.pi(r) for all rows r and sigma in S3."""
     rows = rows_for_option(option)
     fails = []
     for r in rows:
@@ -109,20 +90,20 @@ def check_equivariance(option, convention):
 
 if __name__ == "__main__":
     print("=" * 100)
-    print("TEST 9 — Análisis de escenarios para la convención del sitio")
+    print("TEST 9 - Scenario analysis for the distinguished-site convention")
     print("=" * 100)
     print()
-    print("Verificamos  π(σ·r) = σ·π(r)  para toda fila r y σ ∈ S3.")
-    print("Una convención es S3-equivariante si pasa para todas las filas.")
+    print("We verify  pi(sigma.r) = sigma.pi(r)  for every row r and sigma in S3.")
+    print("A convention is S3-equivariant if it passes for all rows.")
     print()
 
     for option in range(1, 9):
-        print(f"\n── Opción {option} ─────────────────────────────")
+        print(f"\n-- Option {option} -----------------------------")
         for name, conv in CONVENTIONS.items():
             fails = check_equivariance(option, conv)
             if not fails:
-                print(f"  {name:>16}: ✓ equivariante")
+                print(f"  {name:>16}: OK, equivariant")
             else:
-                print(f"  {name:>16}: ✗ {len(fails)} fallos")
+                print(f"  {name:>16}: FAIL, {len(fails)} failures")
                 for f in fails[:2]:
                     print(f"                   {f}")

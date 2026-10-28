@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 """
-Test 15: probabilidad de cada celda para palabras aleatorias.
+Test 15: probability of each cell for random words.
 
-Toma N muestras uniformes de {A,B,C}^k para k = 2..20 y reporta la
-fracción en cada celda. Compara con la distribución de órbitas
-(Test 7): son parecidas para celdas "genéricas" (Ap), pero distintas
-para celdas estructuradas (PP, Pp, pP) porque las órbitas pequeñas
-sobre-pesan esas celdas.
+Draw N uniform samples from {A,B,C}^k for k = 2..20 and report the
+fraction in each cell. Compare with the orbit distribution (Test 7):
+they agree for "generic" cells (Ap) but differ for structured cells
+(PP, Pp, pP) because small orbits overweight those cells.
 
-Sin dependencias de poda: todo es combinatoria directa, rápido.
+No pruning dependency: pure combinatorics, fast.
 """
 
 import random
-from sw.common import classify, is_periodic, is_s3_palindromic
+
+from sw.common import classify
 
 CELLS = ["PP", "Pp", "pP", "Ap"]
 N_SAMPLES = 100_000
@@ -26,12 +26,11 @@ if __name__ == "__main__":
     rng = random.Random(42)
 
     print("=" * 100)
-    print(f"TEST 15 — Distribución de celdas para {N_SAMPLES:,} palabras aleatorias")
+    print(f"TEST 15 - Cell distribution for {N_SAMPLES:,} random words")
     print("=" * 100)
     print()
-    print(f"{'k':>3} | " + " | ".join(f"P({c})" for c in CELLS) + " | P(S3P)"
-          " | P(per)"
-          )
+    print(f"{'k':>3} | " + " | ".join(f"P({c})" for c in CELLS)
+          + " | P(S3P) | P(per)")
     print("-" * 90)
 
     for k in range(2, 21):
@@ -48,13 +47,13 @@ if __name__ == "__main__":
 
     print()
     print("=" * 100)
-    print("LECTURA")
+    print("READING")
     print("=" * 100)
     print("""
-- P(Ap) → 1, como en Test 7.
-- P(S3P) ~ 6·3^{ceil(k/2)} / 3^k = 6·3^{-floor(k/2)}.
-- P(per) ~ O(3^{-k/2}) (dominado por período k/2).
-- Para k grande, ambos decaen exponencialmente.
-- Comparar con Test 7: las celdas estructuradas (PP, pP) aparecen
-  sobrerrepresentadas en órbitas (porque tienen estabilizadores grandes).
+- P(Ap) -> 1, as in Test 7.
+- P(S3P) ~ 6 * 3^{-ceil(k/2)} / 3^k = 6 * 3^{-floor(k/2)}.
+- P(per) ~ O(3^{-k/2}) (dominated by period k/2).
+- For large k, both decay exponentially.
+- Compare with Test 7: structured cells (PP, pP) are overrepresented in
+  orbits (because they have larger stabilizers).
 """)

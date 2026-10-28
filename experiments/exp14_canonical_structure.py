@@ -1,27 +1,24 @@
 #!/usr/bin/env python3
 """
-Test 14: estructura de las palabras canónicas.
+Test 14: structure of the canonical words.
 
-Las palabras que están en datos/n*/canonicas.txt son κ(a), el mínimo
-de la órbita G de la cadena a. Este test analiza su estructura como
-palabras:
+The words in data/n*/canonicas.txt are kappa(a), the minimum of the
+G-orbit of chain a. This test analyzes their structure as words:
 
-  1. ¿Siempre empiezan con 'A'?
-  2. Distribución del primer/último carácter.
-  3. ¿π_k(κ(a)) es el lex-min de la órbita G de π_k(a)?
-  4. Crecimiento de |canónicas(k)| (validación de Burnside).
-  5. Distribución de celdas (debe coincidir con Test 3).
+  1. Do they always start with 'A'?
+  2. Distribution of the first/last character.
+  3. Is pi_k(kappa(a)) the lex-min of the G-orbit of pi_k(a)?
+  4. Growth of |canonical(k)| (Burnside validation).
+  5. Cell distribution (must match Test 3).
 """
 
 from collections import Counter
-from sw.common import (
-    classify, chain_to_word, load_canonical,
-)
+
+from sw.common import S3, apply_perm, classify, chain_to_word, load_canonical
 
 
 def orbit_words(w):
-    """Las 6 imágenes de w bajo S3 más sus reversos (órbita de G en palabras)."""
-    from common import S3, apply_perm
+    """The 6 images of w under S3 plus their reversals (G-orbit on words)."""
     orbit = set()
     for p in S3:
         wp = apply_perm(w, p)
@@ -32,7 +29,7 @@ def orbit_words(w):
 
 if __name__ == "__main__":
     print("=" * 100)
-    print("TEST 14 — Estructura de las palabras canónicas")
+    print("TEST 14 - Structure of canonical words")
     print("=" * 100)
     print()
 
@@ -47,12 +44,12 @@ if __name__ == "__main__":
         n_min_word = sum(1 for w in words if w == min(orbit_words(w)))
         n_starts_A = first.get("A", 0)
 
-        print(f"\n── k = {k}  (|canónicas| = {len(chains)}) ──")
-        print(f"  primer carácter: {dict(first)}")
-        print(f"  último carácter: {dict(last)}")
-        print(f"  empiezan con A:  {n_starts_A}/{len(words)}"
-              f"  {'✓' if n_starts_A == len(words) else '✗'}")
-        label = "✓ (comuta)" if n_min_word == len(words) else "≠ (no comuta)"
-        print(f"  π(κ(a)) = min_word órbita G: {n_min_word}/{len(words)}"
+        print(f"\n-- k = {k}  (|canonical| = {len(chains)}) --")
+        print(f"  first char: {dict(first)}")
+        print(f"  last  char: {dict(last)}")
+        print(f"  start with A: {n_starts_A}/{len(words)}"
+              f"  {'OK' if n_starts_A == len(words) else 'FAIL'}")
+        label = "OK (commutes)" if n_min_word == len(words) else "differs (no commute)"
+        print(f"  pi(kappa(a)) = min_word of G-orbit: {n_min_word}/{len(words)}"
               f"  {label}")
-        print(f"  celdas: {dict(cells)}")
+        print(f"  cells: {dict(cells)}")
