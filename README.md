@@ -63,6 +63,7 @@ The main results:
 - `tests/` — fast pytest checks of the five main claims (used by CI).
 - `outputs/` — captured output of the experiments, as evidence.
 - `docs/research_notes.md` — the full exploratory notes (long form).
+- `docs/roadmap.md` — development roadmap and current status.
 
 ## Installation
 
