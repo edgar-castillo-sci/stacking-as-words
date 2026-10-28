@@ -14,7 +14,9 @@ data/*
 !data/README.md
 !data/summary/
 !data/summary/*.tsv
-data/fibration/
+!data/fibration/
+data/fibration/*
+!data/fibration/README.md
 
 # caugJAM / canonJAM (installed from GitHub)
 caugjam/
